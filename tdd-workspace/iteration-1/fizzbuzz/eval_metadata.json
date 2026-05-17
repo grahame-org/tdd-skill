@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "fizzbuzz",
+  "prompt": "Use TDD to implement a FizzBuzz function in Python. It should return 'Fizz' for multiples of 3, 'Buzz' for multiples of 5, 'FizzBuzz' for multiples of both, and the number as a string otherwise.",
+  "assertions": [
+    "A test file exists and contains at least 4 tests covering plain number, multiple of 3, multiple of 5, and multiple of 15",
+    "The production code file exists and all tests pass",
+    "The agent described or produced a test list before writing any code",
+    "The first test written is for a plain number (not the full FizzBuzz case), showing simplest-first ordering",
+    "No production code exists that is not covered by at least one test"
+  ]
+}

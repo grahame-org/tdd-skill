@@ -1,0 +1,11 @@
+{
+  "eval_id": 3,
+  "eval_name": "bug-fix",
+  "prompt": "There is a bug: a discount function applies a 10% discount twice when both vip=True and code='SAVE10' are supplied. Use TDD to write a reproducing test first, then fix it.",
+  "assertions": [
+    "A test for the combined vip=True and code='SAVE10' case is written and confirmed to fail before any fix is applied",
+    "The fix is minimal — only the double-discount logic is changed",
+    "All tests pass after the fix",
+    "No unrelated behaviour was changed alongside the fix"
+  ]
+}
