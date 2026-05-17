@@ -30,6 +30,15 @@ Start with the degenerate or trivially simple case — an empty collection, a ze
 value, a single-element input. Ordering the list from simplest to most complex lets
 each test drive the implementation forward in small, clear steps.
 
+Focus the initial list on **forcing tests** — tests that require a new implementation
+step to pass. Mark any **triangulation tests** (tests that confirm a general rule
+already in place) separately. Triangulation tests may be added after the corresponding
+forcing test is GREEN; they do not need to appear in the initial list.
+
+The test list is complete when every distinct behavioural rule is covered by at least
+one forcing test. If you find yourself writing a test that passes immediately and does
+not correspond to a new rule, you have likely reached completion.
+
 You don't have to think of every case upfront, just enough to get started. Add to the
 list as you go when new cases come to mind.
 
@@ -44,7 +53,10 @@ Pick the next item from your list. Write a test that:
 
 Run the tests and confirm two things: the new test fails, and it fails because the
 implementation is missing or incomplete (not because of a typo or bad import). If
-the test passes immediately, it is not testing anything new — delete or rework it.
+the test passes immediately without any code change, identify the specific line of
+existing production code that already satisfies the requirement. If you cannot
+identify a specific line, reconsider whether the test belongs at this point in the
+sequence.
 
 Keep only one failing test in existence at a time. More than one makes it hard to
 know what to implement next and easy to accidentally fix the wrong problem.
@@ -68,6 +80,11 @@ transformations to the code have a natural ordering from simple to complex:
 8. Introduce recursion
 9. Extract a function or class
 
+At each GREEN step, ask: would a simpler transformation (higher on the TPP ladder)
+be sufficient to pass just this test? Apply the simplest transformation that makes
+the current test pass, even if you can already see the final implementation. The next
+test will force the next transformation.
+
 If returning a constant makes the test pass, return the constant. Add a conditional
 only when a constant no longer works. Add iteration only when a conditional no longer
 works. Each failing test pushes you one step further up this ladder; you should not
@@ -88,6 +105,10 @@ Look at both the production code and the tests for:
 - Unclear names — variables, functions, or classes that don't communicate intent
 - Tangled logic — nested conditions that could be flattened or extracted
 - Test noise — setup that obscures what each test is actually checking
+- Built-in equivalents — hand-written iteration or logic that a standard-library
+  function already expresses (e.g. `sum()`, `any()`, `max()`, `all()`)
+- Test names — names that describe inputs rather than behaviour; rename them to read
+  like sentences that state what the system does
 
 Make one improvement at a time, run the tests, then make the next. Don't reorganise
 everything in a single sweep. Don't add new behaviour here — if refactoring makes you
