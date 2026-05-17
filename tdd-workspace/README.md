@@ -69,8 +69,8 @@ Once all runs are done:
 
 ```bash
 # Grade each run (replace with skill-creator grader invocation)
-# Then aggregate:
-python -m scripts.aggregate_benchmark tdd-workspace/iteration-1 --skill-name tdd
+# Then aggregate — run from the skill-creator checkout:
+python -m scripts.aggregate_benchmark /path/to/tdd-workspace/iteration-1 --skill-name tdd
 ```
 
 This produces `tdd-workspace/iteration-1/benchmark.json` and
@@ -80,7 +80,8 @@ configurations.
 ### View results
 
 ```bash
-nohup python <skill-creator-path>/eval-viewer/generate_review.py \
+SKILL_CREATOR_PATH=/path/to/skill-creator   # set to your skill-creator checkout
+nohup python $SKILL_CREATOR_PATH/eval-viewer/generate_review.py \
   tdd-workspace/iteration-1 \
   --skill-name "tdd" \
   --benchmark \
