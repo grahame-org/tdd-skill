@@ -1,0 +1,12 @@
+{
+  "eval_id": 4,
+  "eval_name": "sum-of-list",
+  "prompt": "Use TDD to implement a function that returns the sum of a list of integers. Start from the simplest case.",
+  "assertions": [
+    "The first test is for an empty list returning 0",
+    "The implementation for the empty-list test returns the constant 0, not a general loop",
+    "A second test for a single-element list forces a more general approach",
+    "Iteration or equivalent is only introduced once a two-or-more-element test forces it",
+    "All tests pass with the final implementation"
+  ]
+}

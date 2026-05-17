@@ -1,0 +1,12 @@
+{
+  "eval_id": 5,
+  "eval_name": "palindrome",
+  "prompt": "Use TDD to implement a function that checks whether a string is a palindrome (reads the same forwards and backwards, ignoring case and non-alphanumeric characters).",
+  "assertions": [
+    "A test list or plan is described before implementation starts",
+    "Tests cover: empty string, single character, simple palindrome, simple non-palindrome, mixed-case palindrome, palindrome with spaces or punctuation",
+    "All tests pass with the final implementation",
+    "The refactor phase removes any duplication introduced while making tests pass",
+    "The agent runs the test suite after each Red and Green phase"
+  ]
+}
