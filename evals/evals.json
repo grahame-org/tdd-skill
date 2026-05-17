@@ -11,7 +11,11 @@
         "The production code file exists and all tests pass",
         "The agent described or produced a test list before writing any code",
         "The first test written is for a plain number (not the full FizzBuzz case), showing simplest-first ordering",
-        "No production code exists that is not covered by at least one test"
+        "No production code exists that is not covered by at least one test",
+        "Forcing tests (plain number returning itself, first Fizz, first Buzz, first FizzBuzz) appear before any triangulation tests (e.g. Fizz(6), Buzz(10), FizzBuzz(30))",
+        "Test names describe the behaviour being verified rather than just the input value (e.g. 'returns_fizz_for_multiple_of_3' rather than 'test_3')",
+        "The implementation evolves through at least two distinct transformation steps (e.g. constant return before conditional logic is introduced)",
+        "The refactor phase is explicitly considered; opportunities such as combining the modulo checks or removing duplication are noted or applied"
       ]
     },
     {
@@ -24,7 +28,11 @@
         "Tests cover all four methods: push, pop, peek, is_empty",
         "A test verifies that pop on an empty stack raises IndexError",
         "All tests pass with the final implementation",
-        "Tests were added one at a time — no large batches of tests written before the code caught up"
+        "Tests were added one at a time — no large batches of tests written before the code caught up",
+        "A test verifies the behaviour of peek on an empty stack (raises an error or returns a sentinel value)",
+        "Test names are intention-revealing and describe behaviour (e.g. 'new_stack_is_empty', 'pop_from_empty_stack_raises_error')",
+        "The Stack class is not fully scaffolded upfront — methods and attributes are introduced one at a time as tests demand them",
+        "The refactor phase is explicitly considered after each green cycle, and any duplication in the implementation is removed"
       ]
     },
     {
@@ -36,7 +44,10 @@
         "A test for the combined vip=True and code='SAVE10' case is written and confirmed to fail before any fix is applied",
         "The fix is minimal — only the double-discount logic is changed",
         "All tests pass after the fix",
-        "No unrelated behaviour was changed alongside the fix"
+        "No unrelated behaviour was changed alongside the fix",
+        "The regression test name clearly identifies the bug scenario being reproduced",
+        "The regression test contains a single focused assertion that directly captures the double-discount defect",
+        "The fix does not introduce new complexity or branches beyond what is needed to prevent the double application"
       ]
     },
     {
@@ -49,7 +60,10 @@
         "The implementation for the empty-list test returns the constant 0, not a general loop",
         "A second test for a single-element list forces a more general approach",
         "Iteration or equivalent is only introduced once a two-or-more-element test forces it",
-        "All tests pass with the final implementation"
+        "All tests pass with the final implementation",
+        "The refactor phase explicitly considers replacing hand-written iteration with the built-in sum()",
+        "Test names describe the behavioural rule being tested (e.g. 'empty_list_sums_to_zero', 'single_element_list_sums_to_that_element') rather than just the inputs",
+        "The final implementation is O(n) — no nested iteration or quadratic behaviour is introduced"
       ]
     },
     {
@@ -62,7 +76,11 @@
         "Tests cover: empty string, single character, simple palindrome, simple non-palindrome, mixed-case palindrome, palindrome with spaces or punctuation",
         "All tests pass with the final implementation",
         "The refactor phase removes any duplication introduced while making tests pass",
-        "The agent runs the test suite after each Red and Green phase"
+        "The agent runs the test suite after each Red and Green phase",
+        "Forcing tests drive each new transformation step; the agent does not jump directly to the complete normalisation logic (e.g. s == s[::-1]) without intermediate tests forcing each addition",
+        "Triangulation tests (additional examples of the same rule) are added after the corresponding forcing test is green, not batched into the initial test list",
+        "Test names describe the behaviour being verified (e.g. 'single_character_is_a_palindrome', 'ignores_case_when_comparing')",
+        "The implementation handles the full normalisation (case folding and non-alphanumeric stripping) only once tests require it — not speculatively"
       ]
     }
   ]

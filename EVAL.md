@@ -134,6 +134,7 @@ one independently in a clean repository with no pre-existing implementation.
 
 **Expected process**:
 - Agent produces an ordered test list before writing any code.
+- Forcing tests (plain number, first Fizz, first Buzz, first FizzBuzz) appear before any triangulation tests.
 - First test is the simplest case (e.g. a number that is neither a multiple of
   3 nor 5).
 - Each test is written before the code that satisfies it.
@@ -146,6 +147,8 @@ one independently in a clean repository with no pre-existing implementation.
 - A test file with at least five tests: plain number, multiple-of-3,
   multiple-of-5, multiple-of-15, and at least one boundary (e.g. 1 and 100).
 - No production code that is not covered by a test.
+- Test names describe behaviour (e.g. `returns_fizz_for_multiple_of_3`), not inputs.
+- Refactor phase notes or applies any available simplification (e.g. combining the `n%15` check).
 
 ---
 
@@ -155,15 +158,17 @@ one independently in a clean repository with no pre-existing implementation.
 
 **Expected process**:
 - Test list includes at minimum: isEmpty on a new stack, push + pop round-trip,
-  pop from empty stack (error case), multiple push/pop operations.
+  pop from empty stack (error case), peek on empty stack (error case), multiple push/pop operations.
 - Simplest test (isEmpty on empty stack) is tackled first.
 - The implementation grows through transformations; a full class is not
-  scaffolded upfront.
+  scaffolded upfront — methods and attributes are added one at a time as tests demand them.
 
 **Expected output**:
 - A correct Stack implementation.
 - Tests covering all listed behaviours.
-- Error handling for empty pop tested explicitly.
+- Error handling for empty pop **and** empty peek tested explicitly.
+- Test names are intention-revealing (e.g. `new_stack_is_empty`, `pop_from_empty_stack_raises_error`).
+- No duplication in the final production code.
 
 ---
 
@@ -182,7 +187,9 @@ TDD."
 
 **Expected output**:
 - A regression test that would have caught the original bug.
-- A focused fix — no unrelated refactoring mixed in.
+- The test name clearly identifies the bug scenario (e.g. `vip_and_save10_discount_applied_once`).
+- The test contains a single focused assertion that directly captures the double-discount defect.
+- A focused fix — no unrelated refactoring mixed in; no new complexity beyond what is needed.
 - All tests passing after the fix.
 
 ---
@@ -203,6 +210,10 @@ integers."
 - Tests driving each transformation in order.
 - Evidence in git commits (or agent narrative) that simpler transformations
   were tried before more complex ones.
+- Test names describe the behavioural rule (e.g. `empty_list_sums_to_zero`,
+  `single_element_list_sums_to_that_element`).
+- Refactor phase explicitly considers replacing hand-written iteration with `sum()`.
+- Final implementation is O(n) — no nested iteration or quadratic behaviour introduced.
 
 ---
 
@@ -261,15 +272,20 @@ Score each criterion from 0–2: **0** = not met, **1** = partially met,
 | 8 | Hard rules respected (see SKILL.md) | >1 violation | 1 violation | None |
 | 9 | Test names are intention-revealing | Unclear names | Some unclear | All clear |
 | 10 | Final suite is green | Failing tests | Skipped tests | All pass |
+| 11 | Forcing tests distinguished from triangulation tests | Not distinguished | Some distinguished | Clearly separated |
+| 12 | Immediately-passing tests justified (see Step 1 in SKILL.md) | No justification | Partial justification | Specific line identified or test reworked |
+| 13 | Refactor phase uses built-in/stdlib equivalents where applicable | Hand-rolled logic left in place | Opportunity noted but not applied | Applied or correctly determined inapplicable |
+| 14 | Error and edge cases tested explicitly (e.g. empty input, invalid state) | No edge cases | Some edge cases | All relevant edge cases |
+| 15 | Implementation has appropriate algorithmic complexity | Suboptimal complexity (e.g. O(n²)) | Minor inefficiency | O(n) or better where applicable |
 
-**Maximum score: 20**
+**Maximum score: 30**
 
 | Score | Assessment |
 |---|---|
-| 18–20 | Excellent — skill working as intended |
-| 14–17 | Good — minor issues, acceptable for most use |
-| 10–13 | Adequate — process followed but quality issues present |
-| < 10 | Failing — skill needs revision |
+| 27–30 | Excellent — skill working as intended |
+| 21–26 | Good — minor issues, acceptable for most use |
+| 15–20 | Adequate — process followed but quality issues present |
+| < 15 | Failing — skill needs revision |
 
 ---
 
@@ -277,8 +293,8 @@ Score each criterion from 0–2: **0** = not met, **1** = partially met,
 
 The skill is considered to pass evaluation if:
 
-- Scenarios 1, 2, and 3 each score ≥ 16/20.
-- Scenario 4 demonstrates at least three distinct transformation steps.
+- Scenarios 1, 2, and 3 each score ≥ 21/30.
+- Scenario 4 scores ≥ 21/30 and demonstrates at least three distinct transformation steps; the refactor phase considers or applies `sum()`.
 - All four hard-rule violation probes in Scenario 5 produce the correct
   refusal or self-correction.
 
