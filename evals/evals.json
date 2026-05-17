@@ -1,0 +1,69 @@
+{
+  "skill_name": "tdd",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use TDD to implement a FizzBuzz function in Python. It should return 'Fizz' for multiples of 3, 'Buzz' for multiples of 5, 'FizzBuzz' for multiples of both, and the number as a string otherwise.",
+      "expected_output": "A fizzbuzz.py file with the implementation and a test_fizzbuzz.py file. Tests are written before the corresponding implementation. The implementation grows in small steps driven by successive tests.",
+      "files": [],
+      "expectations": [
+        "A test file exists and contains at least 4 tests covering plain number, multiple of 3, multiple of 5, and multiple of 15",
+        "The production code file exists and all tests pass",
+        "The agent described or produced a test list before writing any code",
+        "The first test written is for a plain number (not the full FizzBuzz case), showing simplest-first ordering",
+        "No production code exists that is not covered by at least one test"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Use TDD to implement a Stack class in Python with push, pop, peek, and is_empty methods. pop on an empty stack should raise an IndexError.",
+      "expected_output": "A stack.py file with the Stack implementation and a test_stack.py file. Tests drive each method in turn, starting from is_empty.",
+      "files": [],
+      "expectations": [
+        "A test for is_empty on a new stack appears before any Stack implementation",
+        "Tests cover all four methods: push, pop, peek, is_empty",
+        "A test verifies that pop on an empty stack raises IndexError",
+        "All tests pass with the final implementation",
+        "Tests were added one at a time — no large batches of tests written before the code caught up"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "There is a bug: a discount function applies a 10% discount twice when both vip=True and code='SAVE10' are supplied. Use TDD to write a reproducing test first, then fix it.",
+      "expected_output": "A failing test that reproduces the bug, followed by the minimal fix. The test was written before the fix was applied.",
+      "files": [],
+      "expectations": [
+        "A test for the combined vip=True and code='SAVE10' case is written and confirmed to fail before any fix is applied",
+        "The fix is minimal — only the double-discount logic is changed",
+        "All tests pass after the fix",
+        "No unrelated behaviour was changed alongside the fix"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Use TDD to implement a function that returns the sum of a list of integers. Start from the simplest case.",
+      "expected_output": "An implementation that evolves through multiple transformation steps: constant return for empty list, then variable for single-element list, then iteration for multi-element list.",
+      "files": [],
+      "expectations": [
+        "The first test is for an empty list returning 0",
+        "The implementation for the empty-list test returns the constant 0, not a general loop",
+        "A second test for a single-element list forces a more general approach",
+        "Iteration or equivalent is only introduced once a two-or-more-element test forces it",
+        "All tests pass with the final implementation"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Use TDD to implement a function that checks whether a string is a palindrome (reads the same forwards and backwards, ignoring case and non-alphanumeric characters).",
+      "expected_output": "A palindrome.py and test_palindrome.py. Tests start simple (empty string or single character) and build up to the full normalisation logic.",
+      "files": [],
+      "expectations": [
+        "A test list or plan is described before implementation starts",
+        "Tests cover: empty string, single character, simple palindrome, simple non-palindrome, mixed-case palindrome, palindrome with spaces or punctuation",
+        "All tests pass with the final implementation",
+        "The refactor phase removes any duplication introduced while making tests pass",
+        "The agent runs the test suite after each Red and Green phase"
+      ]
+    }
+  ]
+}
