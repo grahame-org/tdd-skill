@@ -1,8 +1,8 @@
 # TDD Skill — Evaluation Plan
 
 This document describes how to evaluate whether the `tdd` agent skill is
-working correctly. It covers what to test, how to run the tests, and the
-criteria that define success.
+working correctly. It covers how to deploy the skill, how to run the evals,
+and the criteria that define success.
 
 ---
 
@@ -16,6 +16,110 @@ two things:
    before code, minimum code to pass, refactor when green).
 2. **Output quality** — the resulting code and tests are correct, clean, and
    well-expressed.
+
+---
+
+## Deploying the Skill
+
+Before evaluating, the skill must be installed so that the agent can load it.
+
+### Project skill (scoped to one repository)
+
+Copy or symlink this skill directory into one of the locations Copilot checks:
+
+```
+.github/skills/tdd/
+.claude/skills/tdd/
+.agents/skills/tdd/
+```
+
+For example, from the root of the repository you want to evaluate in:
+
+```bash
+mkdir -p .github/skills
+cp -r /path/to/tdd-skill .github/skills/tdd
+```
+
+### Personal skill (available across all projects)
+
+Copy the skill directory to your home-directory skill store:
+
+```bash
+mkdir -p ~/.copilot/skills
+cp -r /path/to/tdd-skill ~/.copilot/skills/tdd
+```
+
+### Installing with GitHub CLI (`gh skill`)
+
+If you have [GitHub CLI](https://cli.github.com) ≥ 2.90.0:
+
+```bash
+# Browse and install interactively from the source repository
+gh skill install grahame-org/tdd-skill
+
+# Or install directly
+gh skill install grahame-org/tdd-skill tdd
+```
+
+Skills are automatically placed in the correct directory for your agent host.
+Use `gh skill preview grahame-org/tdd-skill tdd` first to inspect the
+`SKILL.md` content before installing.
+
+### Verifying the skill triggers
+
+After installing, send a test prompt to your Copilot agent such as:
+
+> "Use TDD to implement a function that doubles a number."
+
+The agent should acknowledge the TDD skill and describe building a test list
+before writing any code. If it does not, check that the skill directory is
+named `tdd` and contains a `SKILL.md` file.
+
+---
+
+## Running Evals with skill-creator
+
+The machine-readable eval cases live in [`evals/evals.json`](./evals/evals.json).
+The recommended way to run them is with the
+[skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)
+skill, which automates the run–grade–compare cycle and provides a browser-based
+review viewer.
+
+### Setup
+
+1. Install or access skill-creator following its own `SKILL.md` instructions.
+2. Point it at this repository's skill directory and `evals/evals.json`.
+
+### Run with skill-creator
+
+With skill-creator active, ask:
+
+> "Run evals for the `tdd` skill at `<path-to-tdd-skill>` using
+> `evals/evals.json`, and show me the results."
+
+skill-creator will:
+
+1. Spawn a **with-skill** run and a **baseline** (without-skill) run for each
+   eval prompt in parallel.
+2. Grade each run against the `expectations` arrays in `evals/evals.json`.
+3. Aggregate results into a `benchmark.json` with pass rates, timing, and token
+   counts for both configurations.
+4. Open the eval viewer so you can inspect qualitative outputs and the
+   quantitative benchmark side by side.
+
+### Interpreting results
+
+The benchmark viewer shows two tabs:
+
+- **Outputs** — click through each eval, compare with-skill vs. baseline
+  outputs, and leave qualitative feedback.
+- **Benchmark** — pass rates, mean ± stddev, timing, and per-assertion
+  breakdowns.
+
+A healthy `tdd` skill run should show a substantially higher pass rate in the
+with-skill configuration than the baseline, particularly on expectations that
+check process adherence (test list before code, simplest-first ordering, one
+red test at a time).
 
 ---
 
@@ -116,7 +220,10 @@ refuses or self-corrects rather than complying:
 
 ---
 
-## Evaluation Procedure
+## Manual Evaluation Procedure
+
+When skill-creator is not available, or for spot-checking individual scenarios,
+use this manual procedure.
 
 1. **Set up**: Create a fresh directory with only a project scaffold (e.g.
    `package.json` + test runner, or a `pyproject.toml`). No source files
@@ -194,3 +301,6 @@ The skill is considered to pass evaluation if:
 - Robert C. Martin, *"The Transformation Priority Premise"* — https://blog.cleancoder.com/uncle-bob/2013/05/27/TheTransformationPriorityPremise.html
 - Robert C. Martin, *"Transformation Priority and Sorting"* — https://blog.cleancoder.com/uncle-bob/2013/05/27/TransformationPriorityAndSorting.html
 - AgentSkills.io, *"Evaluating Skills"* — https://agentskills.io/skill-creation/evaluating-skills
+- GitHub Docs, *"About agent skills"* — https://docs.github.com/en/copilot/concepts/agents/about-agent-skills
+- GitHub Docs, *"Adding agent skills for GitHub Copilot"* — https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/add-skills
+- Anthropic, *"skill-creator"* — https://github.com/anthropics/skills/tree/main/skills/skill-creator
