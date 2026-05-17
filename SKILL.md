@@ -1,193 +1,119 @@
 ---
 name: tdd
 description: >
-  Guide the implementation of any feature or fix using canonical Test-Driven Development
-  (TDD): write a failing test first, write only enough code to make it pass, then
-  refactor. Use when the user says "use TDD", "implement with TDD", "red green refactor",
-  "write tests first", "do TDD", "test-first", or "canon TDD".
+  Implement any feature, function, or bug fix using canonical Test-Driven Development.
+  Write a failing test first, write only enough code to make it pass, then refactor —
+  repeating the Red → Green → Refactor cycle until the requirement is met. Use this
+  skill whenever the user says "use TDD", "implement with TDD", "red green refactor",
+  "write the tests first", "do TDD", "test-first", "canon TDD", or asks you to
+  implement something and mentions tests or correctness as a primary concern. Prefer
+  this skill over ad-hoc coding when the user wants high confidence in correctness
+  or is building something non-trivial.
 license: MIT
-metadata:
-  author: grahame-org
-  version: "1.0.0"
-  tags: tdd testing red-green-refactor quality
-  agentskills_spec: "1.0"
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Glob
-  - Grep
-  - Bash(*)
 ---
 
 # TDD — Test-Driven Development
 
-You are implementing code using canonical Test-Driven Development. TDD is a
-design technique, not just a testing technique: writing tests first forces you
-to clarify the desired behaviour before writing any implementation, and the
-resulting code tends to be simpler, better-structured, and more confidently
-refactorable.
+TDD is a design technique, not just a testing technique. Writing the test before the
+code forces you to think clearly about what the code should do before you write it.
+The result is usually simpler, better-structured, and easier to change with confidence.
 
-The canonical TDD cycle is **Red → Green → Refactor**, repeated for each small
-slice of behaviour.
+The cycle is **Red → Green → Refactor**, repeated for each small slice of behaviour
+until the feature is done.
 
-## Inputs
+## Step 0 — Build the test list
 
-- `$requirement`: The feature, function, or bug fix to implement (may be a
-  natural-language description, a ticket, or an existing failing test).
+Before writing any code, think through the test cases that will prove the requirement
+is satisfied. Write them as a TODO list (comments, a notepad, whatever works).
 
-## Goal
+Start with the degenerate or trivially simple case — an empty collection, a zero
+value, a single-element input. Ordering the list from simplest to most complex lets
+each test drive the implementation forward in small, clear steps.
 
-A working, well-factored implementation whose behaviour is fully described by a
-passing test suite, produced by strict application of the Red → Green → Refactor
-cycle. Every line of production code exists because a test required it.
+You don't have to think of every case upfront, just enough to get started. Add to the
+list as you go when new cases come to mind.
 
----
+## Step 1 — RED: Write one failing test
 
-## Preparation — Build the Test List
+Pick the next item from your list. Write a test that:
 
-Before writing any code, make a list of the test cases that, when passing, will
-prove the requirement is satisfied. This is the "TODO list" for the work.
+- Describes a single specific behaviour.
+- Has a name that reads like a sentence explaining what the system does.
+- Is as small as possible — one assertion, or a tight cluster if they must travel
+  together.
 
-- Think about: happy path, boundary conditions, error cases, edge cases.
-- Write the list as comments or a note — you do **not** write all the tests
-  upfront, just plan them.
-- Start with the simplest case: a degenerate input, an empty collection, a
-  zero value.
+Run the tests and confirm two things: the new test fails, and it fails because the
+implementation is missing or incomplete (not because of a typo or bad import). If
+the test passes immediately, it is not testing anything new — delete or rework it.
 
-**Success criteria**: You have an ordered list of test cases to drive the
-implementation. The simplest is at the top.
+Keep only one failing test in existence at a time. More than one makes it hard to
+know what to implement next and easy to accidentally fix the wrong problem.
 
----
+## Step 2 — GREEN: Write the minimum code to pass
 
-## The TDD Loop
+Write only what is needed to make the failing test pass. When there are several ways
+to do it, prefer the simpler approach. This matters because overly clever code written
+too early is code you will later have to delete or fight against.
 
-Repeat steps 1–3 for each test case on your list until the list is empty.
+A useful heuristic from Robert Martin's Transformation Priority Premise is that
+transformations to the code have a natural ordering from simple to complex:
 
-### Step 1 — RED: Write One Failing Test
+1. Return nothing / null
+2. Return a constant
+3. Use a variable
+4. Add a statement
+5. Add a conditional (`if`/`else`)
+6. Introduce a collection
+7. Introduce iteration
+8. Introduce recursion
+9. Extract a function or class
 
-Pick the next test case from your list (start at the top — simplest first).
+If returning a constant makes the test pass, return the constant. Add a conditional
+only when a constant no longer works. Add iteration only when a conditional no longer
+works. Each failing test pushes you one step further up this ladder; you should not
+jump ahead of it.
 
-Write a test that:
-- Describes a single, specific piece of behaviour.
-- Has a clear, intention-revealing name.
-- Is as small as possible — test one thing.
-- Does **not** yet have production code to make it pass.
+After writing the minimum code, run the full suite. The new test should pass and
+nothing else should break. If a regression appears, your change is doing more than
+necessary — step back and find a simpler approach.
 
-Run the test suite and confirm:
-1. The new test **fails** (red).
-2. It fails for the **right reason** — a missing implementation, not a syntax
-   error or wrong import.
-3. All previously passing tests still pass.
+## Step 3 — REFACTOR: Improve without changing behaviour
 
-**Rules**
-- Never write a test you expect to pass immediately; that proves nothing.
-- If the test cannot be made to fail, the test is wrong — rewrite it or
-  delete it.
-- Do not write more than one new failing test at a time.
+With all tests green you have a safety net: run the suite after every change and it
+will tell you immediately if you broke something.
 
-**Success criteria**: Test suite output shows exactly one new failure, caused by
-missing or incomplete production code.
+Look at both the production code and the tests for:
 
----
+- Duplication — the same logic or structure in two places
+- Unclear names — variables, functions, or classes that don't communicate intent
+- Tangled logic — nested conditions that could be flattened or extracted
+- Test noise — setup that obscures what each test is actually checking
 
-### Step 2 — GREEN: Write the Minimum Code to Pass
+Make one improvement at a time, run the tests, then make the next. Don't reorganise
+everything in a single sweep. Don't add new behaviour here — if refactoring makes you
+realise another case needs testing, add it to the list and come back to it in the
+next Red step.
 
-Write **only** the code needed to make the failing test pass. Apply the
-**Transformation Priority Premise**: when several approaches would make the
-test pass, prefer the simpler transformation. Simple transformations (in
-ascending order of complexity) are:
+## Repeat until the list is empty
 
-1. Return `nil` / `null` / no value.
-2. Return an unconditional constant.
-3. Return or use a scalar variable.
-4. Add a new statement (no branching).
-5. Add an unconditional return / base case.
-6. Add a conditional (`if`/`else`, `match`).
-7. Introduce an array or simple collection.
-8. Introduce iteration (`while`, `for`).
-9. Introduce tail recursion or general recursion.
-10. Extract a function or class.
+When the test list is empty and the suite is green, the implementation is done.
+Do a final check: is there any production code that no test exercises? If so, either
+write a test for it or delete it — untested code is a liability.
 
-If a constant would make the test pass, return the constant — do not introduce
-a variable. If an `if` statement would work, do not write a loop. The
-simplest code that passes the tests is correct for now; complexity is added
-only when forced by a subsequent test.
+## Why these constraints exist
 
-After writing the minimum code, run the full test suite and confirm:
-- The new test passes (green).
-- All previously passing tests still pass (no regressions).
+Writing the test first is not bureaucracy. It is the mechanism that keeps each
+implementation step small and purposeful. When you already know what the test will
+check before writing a line of production code, you cannot accidentally write more
+than needed.
 
-If any previously passing test now fails, undo your last change and try again
-with a simpler approach.
+Keeping only one red test at a time has the same effect: it keeps the feedback loop
+tight. If two tests are failing you do not know which one to fix first, and fixing
+one might accidentally fix the other in a way that papers over a misunderstanding.
 
-**Rules**
-- Do not write more code than is required to pass the current test.
-- Do not "future-proof" or add untested logic.
-- If making the test pass requires significant effort, the test is too large —
-  delete it, break it into smaller tests, and start the loop again.
-
-**Success criteria**: All tests in the suite pass; the new test passes for the
-right reason.
-
----
-
-### Step 3 — REFACTOR: Improve the Code Without Changing Behaviour
-
-Now that all tests are green, examine both the production code and the tests
-for opportunities to improve without changing external behaviour:
-
-- Remove duplication (in production code and in tests).
-- Improve names: variables, functions, classes.
-- Simplify logic: flatten nested conditionals, extract helper functions.
-- Ensure the code expresses intent clearly.
-- Clean up test code: shared setup, clear assertion messages.
-
-After each refactoring change, run the test suite to confirm all tests still
-pass. Refactor in small, safe steps — do not restructure everything at once.
-
-**Rules**
-- Do not add new behaviour during refactor.
-- If refactoring reveals that additional tests are needed, add them to your
-  test list — do not write them now.
-- Stop refactoring when the code is as simple and clear as you can make it
-  given the tests you have so far.
-
-**Success criteria**: All tests still pass; the code is simpler or clearer than
-before the refactoring.
-
----
-
-## Completion
-
-The loop is done when the test list is empty.
-
-Do a final review:
-1. Run the full test suite — all tests must pass.
-2. Review the test list — all planned cases must be covered.
-3. Check that no production code exists that is not driven by a test.
-4. Verify the implementation satisfies the original requirement.
-
-**Success criteria**: Full test suite passes; the test list is empty; the
-requirement is met; no untested production code exists.
-
----
-
-## Hard Rules
-
-- **Tests before code**: Never write production code before a failing test
-  exists for it.
-- **One red test at a time**: Only one failing test may exist at any moment.
-- **Green before refactor**: Do not refactor with a failing test.
-- **Minimum code**: Add no more production code than the tests require.
-- **Tests must actually fail**: If a new test passes immediately, investigate
-  why — it may indicate a duplicate test, a misnamed test, or code added too
-  early.
-- **Transformation priority**: When choosing how to make a test pass, prefer
-  the simpler transformation; complexity is introduced only when the simpler
-  approach cannot be made to work.
-
----
+Not refactoring with a red test is important because refactoring and adding behaviour
+are two different activities that are easy to blur together. Keeping them separate
+makes it much easier to understand what changed and why.
 
 ## References
 
